@@ -17,6 +17,8 @@
 #import "XMNRotateScaleView.h"
 @interface MainViewController ()<CMuneBarDelegate,XMNRotateScaleViewDelegate>
 @property (strong, nonatomic) IBOutlet UIView *bottomView;
+@property (strong, nonatomic) UIImageView *ScreenShotImageView;
+@property (strong, nonatomic) UIView *MaskView;
 @property(nonatomic,strong)CMuneBar *muneBar;
 @property(nonatomic,strong)ShowView *showView;
 @property(nonatomic,strong)AAAViewController *AAA;
@@ -84,7 +86,13 @@
     _ShowViewFrame = _showView.frame;
     [self setShowSubView];
 
+    _MaskView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, ZN_SCREEN_WIDTH, ZN_SCREEN_HEIGHT)];
+    _MaskView.hidden = YES;
+    [self.view addSubview:_MaskView];
 
+    _ScreenShotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ZN_SCREEN_WIDTH, ZN_SCREEN_HEIGHT)];
+    _ScreenShotImageView.hidden = YES;
+    [self.view addSubview:_ScreenShotImageView];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -113,12 +121,62 @@
         _BackButton.alpha = 0;
         _showView.alpha = 0;
         _ProductMessageView.alpha = 0;
+        for (int i = 0; i < self.TapBtn.subviews.count; i++) {
+            if ([self.TapBtn.subviews[i] isKindOfClass:[XMNRotateScaleView class]]) {
+                XMNRotateScaleView  *RotateScaleView = self.TapBtn.subviews[i];
+                if (RotateScaleView.state == XMNRotateScaleViewStateEditing) {
+                    RotateScaleView.beforeState = HideViewbeforeStateEditing;
+                    [RotateScaleView ShowOrHideView:YES];
+                }else{
+                    RotateScaleView.beforeState = HideViewbeforeStateNormal;
+                }
+            }
+        }
     }completion:^(BOOL finished) {
-        [self actionForScreenShotWith:self.view savePhoto:NO];
+        UIImage *image = [self actionForScreenShotWith:self.view savePhoto:NO];
+        _ScreenShotImageView.image = image;
+
+        for (int i = 0; i < self.TapBtn.subviews.count; i++) {
+            if ([self.TapBtn.subviews[i] isKindOfClass:[XMNRotateScaleView class]]) {
+                XMNRotateScaleView  *RotateScaleView = self.TapBtn.subviews[i];
+                if (RotateScaleView.beforeState == HideViewbeforeStateEditing) {
+                    [RotateScaleView ShowOrHideView:NO];
+                }
+            }
+        }
+        _MaskView.backgroundColor = [UIColor blackColor];
+        _MaskView.alpha =0.75;
+
+        _ScreenShotImageView.alpha = 1;
+        _ScreenShotImageView.hidden = NO;
+        _MaskView.hidden = NO;
+        [UIView animateWithDuration:1 animations:^{
+
+            _ScreenShotImageView.width = ZN_SCREEN_WIDTH - (self.muneBar.width + 10)*2;
+            _ScreenShotImageView.height = _ScreenShotImageView.width * (ZN_SCREEN_HEIGHT/ZN_SCREEN_WIDTH);
+            _ScreenShotImageView.x = self.muneBar.width + 10;
+            _ScreenShotImageView.y = (self.muneBar.width + 20)/2;
+        }completion:^(BOOL finished) {
+            [UIView animateWithDuration:3 animations:^{
+                _ScreenShotImageView.alpha = 0;
+            }completion:^(BOOL finished) {
+                 _MaskView.backgroundColor = [UIColor clearColor];
+                _ScreenShotImageView.hidden = YES;
+                _MaskView.hidden = YES;
+                _ScreenShotImageView.width = ZN_SCREEN_WIDTH;
+                _ScreenShotImageView.height = ZN_SCREEN_HEIGHT;
+                _ScreenShotImageView.x = 0;
+                _ScreenShotImageView.y = 0;
+                [self ShowViewButton];
+            }];
+        }];
+
     }];
 }
-- (void)actionForScreenShotWith:(UIView *)aimView savePhoto:(BOOL)savePhoto {
-    if (!aimView) return;
+- (UIImage *)actionForScreenShotWith:(UIView *)aimView savePhoto:(BOOL)savePhoto {
+    if (!aimView) {
+        return nil;
+    }
     UIGraphicsBeginImageContextWithOptions(aimView.bounds.size, NO, 0.0f);
     if ([aimView respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
         [aimView drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
@@ -134,7 +192,7 @@
     UIImageWriteToSavedPhotosAlbum(viewImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
 
     }
-    [self ShowViewButton];
+    return viewImage;
 }
 - (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo{
     if (error) {
@@ -277,6 +335,12 @@
 
     [UIView animateWithDuration:0.5 animations:^{
         _ProductMessageView.alpha = 0;
+        for (int i = 0; i < self.TapBtn.subviews.count; i++) {
+            if ([self.TapBtn.subviews[i] isKindOfClass:[XMNRotateScaleView class]]) {
+                XMNRotateScaleView  *RotateScaleView = self.TapBtn.subviews[i];
+                [RotateScaleView ShowOrHideView:YES];
+            }
+        }
     } completion:^(BOOL finished) {
         _ProductMessageView.hidden = YES;
     }];

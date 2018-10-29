@@ -92,7 +92,9 @@ CG_INLINE CGRect CGRectScale(CGRect rect, CGFloat wScale, CGFloat hScale)
     }
     _moved = NO;
 }
-
+-(void)ShowOrHideView:(BOOL)state{
+    [self setState:!state];
+}
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
 }
@@ -207,7 +209,6 @@ CG_INLINE CGRect CGRectScale(CGRect rect, CGFloat wScale, CGFloat hScale)
 - (void)setState:(XMNRotateScaleViewState)state {
 
     _state = state;
-    
     if (state == XMNRotateScaleViewStateEditing) {
         self.rotateScaleIV.hidden = NO;
         self.CancelIV.hidden = NO;

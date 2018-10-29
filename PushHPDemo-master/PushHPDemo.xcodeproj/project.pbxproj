@@ -507,7 +507,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = HR54W84ZLJ;
-				GCC_PREFIX_HEADER = "/Users/macbook/Desktop/PushHPDemo-master/PushHPDemo/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "/Users/macbook/Documents/GitHub/IlakOsajdfkS/PushHPDemo-master/PushHPDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = PushHPDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -523,7 +523,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = HR54W84ZLJ;
-				GCC_PREFIX_HEADER = "/Users/macbook/Desktop/PushHPDemo-master/PushHPDemo/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "/Users/macbook/Documents/GitHub/IlakOsajdfkS/PushHPDemo-master/PushHPDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = PushHPDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

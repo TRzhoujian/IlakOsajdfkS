@@ -19,7 +19,10 @@ typedef NS_ENUM(NSUInteger, XMNRotateScaleViewState) {
     XMNRotateScaleViewStateNormal,
     XMNRotateScaleViewStateEditing,
 };
-
+typedef NS_ENUM(NSUInteger, HideViewbeforeState) {
+    HideViewbeforeStateNormal,
+    HideViewbeforeStateEditing,
+};
 @protocol XMNRotateScaleViewDelegate;
 @interface XMNRotateScaleView : UIView
 
@@ -32,6 +35,8 @@ typedef NS_ENUM(NSUInteger, XMNRotateScaleViewState) {
 @property (nonatomic, assign) CGFloat borderWidth; /**< 边框粗细,默认为1.0f */
 
 @property (nonatomic, assign) XMNRotateScaleViewState state;
+@property (nonatomic, assign) HideViewbeforeState beforeState;
+-(void)ShowOrHideView:(BOOL)state;
 
 @end
 
