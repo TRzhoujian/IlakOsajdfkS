@@ -106,22 +106,66 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)SaveBtn:(id)sender {
+    [UIView animateWithDuration:0.5 animations:^{
+        _muneBar.alpha = 0;
+        _bottomView.alpha = 0;
+        _BackButton.alpha = 0;
+        _showView.alpha = 0;
+        _ProductMessageView.alpha = 0;
+    }completion:^(BOOL finished) {
+        [self actionForScreenShotWith:self.view savePhoto:NO];
+    }];
+}
+- (void)actionForScreenShotWith:(UIView *)aimView savePhoto:(BOOL)savePhoto {
+    if (!aimView) return;
+    UIGraphicsBeginImageContextWithOptions(aimView.bounds.size, NO, 0.0f);
+    if ([aimView respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+        [aimView drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
 
+    } else {
+        [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+
+    }
+    UIImage* viewImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    if (savePhoto) {
+    /// 保存到本地相册
+    UIImageWriteToSavedPhotosAlbum(viewImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+
+    }
+    [self ShowViewButton];
+}
+- (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo{
+    if (error) {
+        NSLog(@"保存失败，请重试");
+    } else {
+        NSLog(@"保存成功");
+    }
+
+}
 
 -(void)setShowSubView{
     __weak __typeof__(self) weakSelf = self;
+
+
     _AAA = [AAAViewController new];
     _AAA.myBlock = ^(UIImage * _Nonnull image, ChangeImageType ImageType) {
         weakSelf.BeiJingView.image = image;
     };
-    [self addChildViewController:_AAA];
+
+
+
     _BBB = [BBBViewController new];
     _BBB.myBlock= ^(UIImage * _Nonnull image, ChangeImageType ImageType) {
         [weakSelf addImageView:image];
     };
-    [self addChildViewController:_BBB];
+
+
     _EEE = [CCCViewController new];
-    [self addChildViewController:_EEE];
+
+
+
     _CCC = [CCCViewController new];
     _CCC.myBlock = ^(UIImage * _Nonnull image, ChangeImageType ImageType) {
         if (ImageType == AddImageType) {
@@ -130,9 +174,17 @@
             weakSelf.BeiJingView.image = image;
         }
     };
-    [self addChildViewController:_CCC];
+
     _DDD = [DDDViewController new];
+
+
+
+
+    [self addChildViewController:_AAA];
+    [self addChildViewController:_BBB];
+    [self addChildViewController:_CCC];
     [self addChildViewController:_DDD];
+    [self addChildViewController:_EEE];
 
     [ViewArr addObjectsFromArray:@[_DDD,_CCC,_EEE,_BBB,_AAA]];
 }
@@ -182,6 +234,14 @@
         [_showView addSubview:VC.view];
         [self MovedMuneBer:_isShow MuneBarMinX:ZN_SCREEN_WIDTH - SHOWVIEW_WIDTH - MuneBtnWidth -10];
         [VC SetFrame];
+    }else{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"立即下单" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSLog(@"立即下单");
+        }];
+        [alert addAction:action];
+        UIViewController *presentVC = [[UIApplication sharedApplication] keyWindow].rootViewController;
+        [presentVC presentViewController:alert animated:YES completion:nil];
     }
 }
 
@@ -225,29 +285,31 @@
 - (IBAction)DoubleTap:(UITapGestureRecognizer *)sender {
     _ViewBtnIsShow = !_ViewBtnIsShow;
     if (_ViewBtnIsShow == YES) {
-        [UIView animateWithDuration:0.5 animations:^{
-            _muneBar.alpha = 0;
-            _bottomView.alpha = 0;
-            _BackButton.alpha = 0;
-            _showView.alpha = 0;
-            _ProductMessageView.alpha = 0;
-        }];
-
+        [self hideViewButton];
     }else{
-        [UIView animateWithDuration:0.5 animations:^{
-            _muneBar.alpha = 1;
-            _bottomView.alpha = 1;
-            _BackButton.alpha = 1;
-            _showView.alpha = 0.75;
-            if (_ProductMessageView.hidden == YES) {
-                _ProductMessageView.alpha = 0.7;
-            }
-
-        }];
-
+        [self ShowViewButton];
     }
 }
-
+-(void)hideViewButton{
+    [UIView animateWithDuration:0.5 animations:^{
+        _muneBar.alpha = 0;
+        _bottomView.alpha = 0;
+        _BackButton.alpha = 0;
+        _showView.alpha = 0;
+        _ProductMessageView.alpha = 0;
+    }];
+}
+-(void)ShowViewButton{
+    [UIView animateWithDuration:0.5 animations:^{
+        _muneBar.alpha = 1;
+        _bottomView.alpha = 1;
+        _BackButton.alpha = 1;
+        _showView.alpha = 0.75;
+        if (_ProductMessageView.hidden == YES) {
+            _ProductMessageView.alpha = 0.7;
+        }
+    }];
+}
 -(void)hideShowView{
     __weak __typeof__(self) weakSelf = self;
     [UIView animateWithDuration:0.5 animations:^{

@@ -47,6 +47,9 @@
                                 <constraint firstAttribute="width" secondItem="imB-0D-vig" secondAttribute="height" multiplier="1:1" id="1nW-vR-Aiy"/>
                             </constraints>
                             <state key="normal" image="icon_save"/>
+                            <connections>
+                                <action selector="SaveBtn:" destination="-1" eventType="touchUpInside" id="AZL-RM-Chh"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="33u-ac-s8M" customClass="MyButton">
                             <rect key="frame" x="62" y="0.0" width="47" height="47"/>
