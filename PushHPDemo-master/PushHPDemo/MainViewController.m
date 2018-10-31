@@ -144,6 +144,7 @@
                 }
             }
         }
+        _TapBtn.hidden = YES;
         _MaskView.backgroundColor = [UIColor blackColor];
         _MaskView.alpha =0.75;
 
@@ -151,7 +152,6 @@
         _ScreenShotImageView.hidden = NO;
         _MaskView.hidden = NO;
         [UIView animateWithDuration:1 animations:^{
-
             _ScreenShotImageView.width = ZN_SCREEN_WIDTH - (self.muneBar.width + 10)*2;
             _ScreenShotImageView.height = _ScreenShotImageView.width * (ZN_SCREEN_HEIGHT/ZN_SCREEN_WIDTH);
             _ScreenShotImageView.x = self.muneBar.width + 10;
@@ -163,6 +163,7 @@
                  _MaskView.backgroundColor = [UIColor clearColor];
                 _ScreenShotImageView.hidden = YES;
                 _MaskView.hidden = YES;
+                _TapBtn.hidden = NO;
                 _ScreenShotImageView.width = ZN_SCREEN_WIDTH;
                 _ScreenShotImageView.height = ZN_SCREEN_HEIGHT;
                 _ScreenShotImageView.x = 0;
@@ -186,22 +187,23 @@
 
     }
     UIImage* viewImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    if (savePhoto) {
-    /// 保存到本地相册
-    UIImageWriteToSavedPhotosAlbum(viewImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
-
-    }
+//    UIGraphicsEndImageContext();
+//    if (savePhoto) {
+//    /// 保存到本地相册
+//    UIImageWriteToSavedPhotosAlbum(viewImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+//
+//    }
     return viewImage;
 }
-- (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo{
-    if (error) {
-        NSLog(@"保存失败，请重试");
-    } else {
-        NSLog(@"保存成功");
-    }
 
-}
+
+//- (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo{
+//    if (error) {
+//        NSLog(@"保存失败，请重试");
+//    } else {
+//        NSLog(@"保存成功");
+//    }
+//}
 
 -(void)setShowSubView{
     __weak __typeof__(self) weakSelf = self;
